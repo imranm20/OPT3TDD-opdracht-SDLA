@@ -24,17 +24,19 @@ public class Main {
         public void addDeadline() throws ParseException {
             System.out.println("Welkom bij het toevoegen van een deadline, als u wilt stoppen  type dan" + "'stop'");
             System.out.println("Geef de datum in dit format: dd-mm-jjjj");
+            Date vandaag = new Date();
             String regDate = s.nextLine();
-            if (regDate.equals("stop")) {
-                menu();
-            }
+
 
             Date date1 = new SimpleDateFormat("dd-MM-yyyy").parse(regDate);
             s.nextLine();
-
+            int comparison= date1.compareTo(vandaag);
+            if (regDate.equals("stop") || !(comparison == 1) ) {
+                menu();
+            }
             System.out.println("Geef de naam van de deadline:");
             String naam1 = s.nextLine();
-            if (naam1.equals("stop")) {
+            if (naam1.equals("stop") ) {
                 menu();
             }
             s.nextLine();
@@ -107,6 +109,7 @@ public class Main {
 
         public void menu() {
             System.out.println("welkom bij het menu");
+            System.exit(0);
         }
     }
 

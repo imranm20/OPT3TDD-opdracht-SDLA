@@ -1,5 +1,6 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
@@ -7,6 +8,8 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args)  {
+
+
         SDLAMain main = new SDLAMain();
         try {
             main.addDeadline();
@@ -23,17 +26,16 @@ public class Main {
 
         public void addDeadline() throws ParseException {
             System.out.println("Welkom bij het toevoegen van een deadline, als u wilt stoppen  type dan" + "'stop'");
-            System.out.println("Geef de datum in dit format: dd-mm-jjjj");
-            Date vandaag = new Date();
+            System.out.println("Geef de datum in dit format: jjjj-mm-dd");
+
             String regDate = s.nextLine();
-
-
-            Date date1 = new SimpleDateFormat("dd-MM-yyyy").parse(regDate);
-            s.nextLine();
+            LocalDate vandaag = LocalDate.now();
+      LocalDate date1 = LocalDate.parse(regDate);
             int comparison= date1.compareTo(vandaag);
-            if (regDate.equals("stop") || !(comparison == 1) ) {
+            if (regDate.equals("stop") || (comparison > -1) ) {
                 menu();
             }
+
             System.out.println("Geef de naam van de deadline:");
             String naam1 = s.nextLine();
             if (naam1.equals("stop") ) {
@@ -48,7 +50,7 @@ public class Main {
             s.nextLine();
             System.out.println("Geef de informatie over deze deadline:");
             String info1 = s.nextLine();
-            if (info1.equals("stop") || info1.length() > 249) {
+            if (info1.equals("stop") || info1.length() <= 249) {
                 menu();
             }
             s.nextLine();
@@ -115,12 +117,12 @@ public class Main {
 
 
     abstract class deadline {
-        Date datum;
+        LocalDate datum;
         String naam = "";
         String vak = "";
         String informatie = "";
 
-        public deadline(Date d, String x, String y, String z) {
+        public deadline(LocalDate d, String x, String y, String z) {
             this.datum = d;
             this.naam = x;
             this.vak = y;
@@ -135,7 +137,7 @@ public class Main {
         int Minutenduur;
         String lokaal;
 
-        public toets(Date d, String x, String y, String z, int studiepunten, int minutenduur, String lokaal) {
+        public toets(LocalDate d, String x, String y, String z, int studiepunten, int minutenduur, String lokaal) {
             super(d, x, y, z);
             this.studiepunten = studiepunten;
             this.Minutenduur = minutenduur;
@@ -147,7 +149,7 @@ public class Main {
         String teamgenoten = "";
         int prioriteitOpSchaalVanTien;
 
-        public huiswerk(Date d, String x, String y, String z, String teamgenoten, int prioriteitOpSchaalVanTien) {
+        public huiswerk(LocalDate d, String x, String y, String z, String teamgenoten, int prioriteitOpSchaalVanTien) {
             super(d, x, y, z);
             this.teamgenoten = teamgenoten;
             this.prioriteitOpSchaalVanTien = prioriteitOpSchaalVanTien;

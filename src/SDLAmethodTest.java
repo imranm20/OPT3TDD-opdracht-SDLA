@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class SDLAMainTest {
+class SDLAmethodTest {
     public boolean eqMethode(String x, LocalDate y) {
         LocalDate vandaag = LocalDate.now();
         int comparison = y.compareTo(vandaag);
@@ -89,7 +89,7 @@ class SDLAMainTest {
     @Disabled
     @Test
     void MCDC1eTrue() throws ParseException {
-        SDLAMain test = new SDLAMain();
+        SDLAmethod test = new SDLAmethod();
         test.addDeadline();
         assertEquals(1, test.opslag.size());
     }
@@ -97,7 +97,7 @@ class SDLAMainTest {
     @Disabled
     @Test
     void MCDC2eTrue() throws ParseException {
-        SDLAMain test = new SDLAMain();
+        SDLAmethod test = new SDLAmethod();
         test.addDeadline();
         assertEquals(1, test.opslag.size());
     }
@@ -105,7 +105,7 @@ class SDLAMainTest {
     @Disabled
     @Test
     void MCDC1eFalse() throws ParseException {
-        SDLAMain test = new SDLAMain();
+        SDLAmethod test = new SDLAmethod();
         test.addDeadline();
         assertEquals(0, test.opslag.size());
     }
@@ -113,7 +113,7 @@ class SDLAMainTest {
     @Disabled
     @Test
     void MCDC2eFalse() throws ParseException {
-        SDLAMain test = new SDLAMain();
+        SDLAmethod test = new SDLAmethod();
         test.addDeadline();
         assertEquals(0, test.opslag.size());
     }
@@ -121,7 +121,7 @@ class SDLAMainTest {
     @Disabled
     @Test
     void MCDC3eFalse() throws ParseException {
-        SDLAMain test = new SDLAMain();
+        SDLAmethod test = new SDLAmethod();
         test.addDeadline();
         assertEquals(0, test.opslag.size());
     }
@@ -129,7 +129,7 @@ class SDLAMainTest {
     @Disabled
     @Test
     void MCDC4eFalse() throws ParseException {
-        SDLAMain test = new SDLAMain();
+        SDLAmethod test = new SDLAmethod();
         test.addDeadline();
         assertEquals(0, test.opslag.size());
     }

@@ -4,23 +4,30 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-
+    private SDLAmethod inMain1 = new SDLAmethod();
+    private agendaData inMain2 = new agendaData();
+    public static void menu() {
+        System.out.println("welkom bij het menu");
+        System.exit(0);
+    }
     public static void main(String[] args) {
 
 
-        SDLAMain main = new SDLAMain();
-        try {
-            main.addDeadline();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 }
 
-class SDLAMain {
-    Scanner s = new Scanner(System.in);
+class agendaData {
+    public static ArrayList<deadline> opslag = new ArrayList<>();
 
-    public final ArrayList<deadline> opslag = new ArrayList<deadline>();
+    public deadline getDatum() {
+        deadline returned = null;
+
+        return returned;
+    }
+}
+
+class SDLAmethod {
+      Scanner s = new Scanner(System.in);
 
     public void addDeadline() throws ParseException {
         System.out.println("Welkom bij het toevoegen van een deadline, als u wilt stoppen  type dan" + "'stop'");
@@ -31,118 +38,101 @@ class SDLAMain {
         LocalDate date1 = LocalDate.parse(regDate);
         int comparison = date1.compareTo(vandaag);
         if (regDate.equals("stop") || (comparison > -1)) {
-            menu();
-        }
+            Main.menu();       }
 
         System.out.println("Geef de naam van de deadline:");
         String naam1 = s.nextLine();
         if (naam1.equals("stop")) {
-            menu();
-        }
-        s.nextLine();
+            Main.menu();        }
         System.out.println("Geef de naam van het vak:");
         String vaknaam1 = s.nextLine();
         if (vaknaam1.equals("stop")) {
-            menu();
-        }
-        s.nextLine();
+            Main.menu();        }
         System.out.println("Geef de informatie over deze deadline:");
         String info1 = s.nextLine();
         if (info1.equals("stop") || info1.length() <= 249) {
-            menu();
-        }
-        s.nextLine();
+            Main.menu();       }
         System.out.println("Voer de soort deadline in ( toets/huiswerk )");
         String dd = s.nextLine();
         if (dd.equals("stop") || !(dd.equalsIgnoreCase("toets") || dd.equalsIgnoreCase("huiswerk"))) {
-            menu();
-        }
+            Main.menu();        }
         if (dd.equalsIgnoreCase("toets")) {
             s.nextLine();
             System.out.println("Voer het aantal studiepunten in(geheel nummer))");
             String stdinvoer = s.nextLine();
             if (stdinvoer.equals("stop")) {
-                menu();
-            }
+                Main.menu();            }
             int std = Integer.parseInt(stdinvoer);
-            s.nextLine();
             System.out.println("Voer het aantal minuten in(geheel nummer))");
             String mininvoer = s.nextLine();
             if (mininvoer.equals("stop")) {
-                menu();
-            }
+                Main.menu();            }
             int duur = Integer.parseInt(mininvoer);
             s.nextLine();
             System.out.println("Geef het lokaalnummer");
             String lokaal = s.nextLine();
             if (lokaal.equals("stop")) {
-                menu();
+                Main.menu();
             } else {
                 toets t1 = new toets(date1, naam1, vaknaam1, info1, std, duur, lokaal);
-                opslag.add(t1);
+                agendaData.opslag.add(t1);            }
             }
-
-        } else if (dd.equalsIgnoreCase("huiswerk")) {
+             else if (dd.equalsIgnoreCase("huiswerk")) {
             System.out.println("Voer je teamgenoten in");
             String team1 = s.nextLine();
             if (team1.equals("stop")) {
-                menu();
+                Main.menu();
             }
-            s.nextLine();
             System.out.println("Geef de prioriteit op een schaal van tien(geheel nummer)");
             String prio = s.nextLine();
             int prioriteit = Integer.parseInt(prio);
             if (prio.equals("stop")) {
-                menu();
+                Main.menu();
             } else {
                 huiswerk h1 = new huiswerk(date1, naam1, vaknaam1, info1, team1, prioriteit);
-                opslag.add(h1);
+                agendaData.opslag.add(h1);
             }
-
         }
-
     }
 
-    public void menu() {
-        System.out.println("welkom bij het menu");
-        System.exit(0);
+    public void addInfo(){
     }
 }
 
 abstract class deadline {
-    LocalDate datum;
-    String naam;
-    String vak;
-    String informatie;
+    private LocalDate datum;
+    private String naam;
+    private String vak;
+    private String informatie;
 
-    public deadline(LocalDate d, String x, String y, String z) {
-        this.datum = d;
-        this.naam = x;
-        this.vak = y;
-        this.informatie = z;
+    public deadline(LocalDate date, String naam, String vak, String informatie) {
+        this.datum = date;
+        this.naam = naam;
+        this.vak = vak;
+        this.informatie = informatie;
     }
 
 }
 
 class toets extends deadline {
-    int studiepunten;
-    int Minutenduur;
-    String lokaal;
+    private int studiepunten;
+    private int minutenduur;
+    private String lokaal;
 
-    public toets(LocalDate d, String x, String y, String z, int studiepunten, int minutenduur, String lokaal) {
-        super(d, x, y, z);
+    public toets(LocalDate date, String naam, String vak, String informatie, int studiepunten, int minutenduur, String lokaal) {
+        super(date, naam, vak, informatie);
         this.studiepunten = studiepunten;
-        this.Minutenduur = minutenduur;
+        this.minutenduur = minutenduur;
         this.lokaal = lokaal;
     }
 }
 
 class huiswerk extends deadline {
-    String teamgenoten;
-    int prioriteitOpSchaalVanTien;
+    private String teamgenoten;
+    private int prioriteitOpSchaalVanTien;
 
-    public huiswerk(LocalDate d, String x, String y, String z, String teamgenoten, int prioriteitOpSchaalVanTien) {
-        super(d, x, y, z);
+    public huiswerk(LocalDate date, String naam, String vak, String informatie, String teamgenoten, int prioriteitOpSchaalVanTien) {
+        super(date, naam, vak, informatie);
         this.teamgenoten = teamgenoten;
         this.prioriteitOpSchaalVanTien = prioriteitOpSchaalVanTien;
     }

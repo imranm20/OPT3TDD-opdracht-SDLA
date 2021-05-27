@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Main {
     private SDLAmethod inMain1 = new SDLAmethod();
-    private agendaData inMain2 = new agendaData();
+    private AgendaData inMain2 = new AgendaData();
     public static void menu() {
         System.out.println("welkom bij het menu");
         System.exit(0);
@@ -16,11 +16,11 @@ public class Main {
     }
 }
 
-class agendaData {
-    public static ArrayList<deadline> opslag = new ArrayList<>();
+class AgendaData {
+    public static ArrayList<Opdracht> opslag = new ArrayList<>();
 
-    public deadline getDatum() {
-        deadline returned = null;
+    public Opdracht getDatum() {
+        Opdracht returned = null;
 
         return returned;
     }
@@ -48,7 +48,7 @@ class SDLAmethod {
         String vaknaam1 = s.nextLine();
         if (vaknaam1.equals("stop")) {
             Main.menu();        }
-        System.out.println("Geef de informatie over deze deadline:");
+        System.out.println("Geef de omschrijving over deze deadline:");
         String info1 = s.nextLine();
         if (info1.equals("stop") || info1.length() <= 249) {
             Main.menu();       }
@@ -74,8 +74,8 @@ class SDLAmethod {
             if (lokaal.equals("stop")) {
                 Main.menu();
             } else {
-                toets t1 = new toets(date1, naam1, vaknaam1, info1, std, duur, lokaal);
-                agendaData.opslag.add(t1);            }
+                ToetsOpdracht t1 = new ToetsOpdracht(date1, naam1, vaknaam1, info1, std, duur, lokaal);
+                AgendaData.opslag.add(t1);            }
             }
              else if (dd.equalsIgnoreCase("huiswerk")) {
             System.out.println("Voer je teamgenoten in");
@@ -89,8 +89,8 @@ class SDLAmethod {
             if (prio.equals("stop")) {
                 Main.menu();
             } else {
-                huiswerk h1 = new huiswerk(date1, naam1, vaknaam1, info1, team1, prioriteit);
-                agendaData.opslag.add(h1);
+                HuiswerkOpdracht h1 = new HuiswerkOpdracht(date1, naam1, vaknaam1, info1, team1, prioriteit);
+                AgendaData.opslag.add(h1);
             }
         }
     }
@@ -99,40 +99,41 @@ class SDLAmethod {
     }
 }
 
-abstract class deadline {
+abstract class Opdracht {
     private LocalDate datum;
     private String naam;
     private String vak;
-    private String informatie;
+    private String omschrijving;
 
-    public deadline(LocalDate date, String naam, String vak, String informatie) {
+
+    public Opdracht(LocalDate date, String naam, String vak, String omschrijving) {
         this.datum = date;
         this.naam = naam;
         this.vak = vak;
-        this.informatie = informatie;
+        this.omschrijving = omschrijving;
     }
 
 }
 
-class toets extends deadline {
+class ToetsOpdracht extends Opdracht {
     private int studiepunten;
     private int minutenduur;
     private String lokaal;
 
-    public toets(LocalDate date, String naam, String vak, String informatie, int studiepunten, int minutenduur, String lokaal) {
-        super(date, naam, vak, informatie);
+    public ToetsOpdracht(LocalDate date, String naam, String vak, String omschrijving, int studiepunten, int minutenduur, String lokaal) {
+        super(date, naam, vak, omschrijving);
         this.studiepunten = studiepunten;
         this.minutenduur = minutenduur;
         this.lokaal = lokaal;
     }
 }
 
-class huiswerk extends deadline {
+class HuiswerkOpdracht extends Opdracht {
     private String teamgenoten;
     private int prioriteitOpSchaalVanTien;
 
-    public huiswerk(LocalDate date, String naam, String vak, String informatie, String teamgenoten, int prioriteitOpSchaalVanTien) {
-        super(date, naam, vak, informatie);
+    public HuiswerkOpdracht(LocalDate date, String naam, String vak, String omschrijving, String teamgenoten, int prioriteitOpSchaalVanTien) {
+        super(date, naam, vak, omschrijving);
         this.teamgenoten = teamgenoten;
         this.prioriteitOpSchaalVanTien = prioriteitOpSchaalVanTien;
     }

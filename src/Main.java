@@ -1,74 +1,90 @@
+import javax.print.DocFlavor;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    public SDLAMethodsFactory sdlaMethodObject = new SDLAMethodsFactory();
-    public AgendaData agendaDataObject = new AgendaData();
+    public static SDLAMethodsFactory sdlaMethodObject = new SDLAMethodsFactory();
+    public static AgendaData agendaDataObject = new AgendaData();
+
     public static void menu() {
-        System.out.println("welkom bij het menu");
-        System.exit(0);
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Welkom bij het menu.");
+        System.out.println("Voer het nummer in van de optie die u wilt.");
+        System.out.println("1: Plaats een opdracht");
+        System.out.println("2: Verkrijg uw opdracht");
+        int keuze = scanner.nextInt();
+        if (keuze == 1){sdlaMethodObject.addOpdrachtStart();}
+        else if (keuze == 2){agendaDataObject.printOpdracht();}
+
     }
     public static void main(String[] args) {
-        SDLAMethodsFactory sdlaMethodObject = new SDLAMethodsFactory();
-        sdlaMethodObject.addOpdrachtStart();
+    menu();
+
     }
 }
 
 class AgendaData {
-    public static ArrayList<Opdracht> opslag = new ArrayList<>();
 
-    public Opdracht getOpdrachtenOpDatum() {
-        Opdracht returned = null;
+    public ArrayList<Opdracht> opslag = new ArrayList<>();
+    private Scanner scanner = new Scanner(System.in);
 
+    public Opdracht getOpdrachtenOpDatum(LocalDate dag, String naamOpdracht) {
+        for (int i = 0; i < Main.agendaDataObject.opslag.size(); i++)
+            if (Main.agendaDataObject.opslag.get(i).getDatum().equals(dag) && Main.agendaDataObject.opslag.get(i).getNaam().equalsIgnoreCase(naamOpdracht)) {
+                return Main.agendaDataObject.opslag.get(i);
+            }
+        return null;
+    }
 
-        return returned;
+    public void printOpdracht() {
+        System.out.println("Geef de datum waarop de opdracht plaats vind, (jjjj-mm-dd)");
+        String regDate = scanner.nextLine();
+        LocalDate date = LocalDate.parse(regDate);
+        System.out.println("Geef de naam van de opdracht");
+        String naam = scanner.nextLine();
+        Opdracht opdracht = getOpdrachtenOpDatum(date, naam);
+        if (opdracht == null) {
+            System.out.println("De opdracht bestaat niet");
+        } else {
+            System.out.println(opdracht.toString());
+        }
     }
 }
-
 class SDLAMethodsFactory {
-    Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
 
     public void addOpdrachtStart() {
+        System.out.println("Voer de soort opdracht in ( toets/huiswerk )");
 
-        boolean a = false;
-        String soortOpdracht;
-
-        while (a =false) {
-            System.out.println("Voer de soort opdracht in ( toets/huiswerk )");
-            soortOpdracht = scanner.nextLine();
+        String soortOpdracht = scanner.nextLine();
 
             if (soortOpdracht.equalsIgnoreCase("toets") ) {
                 this.addToetsOpdracht();
-                a = true;
             }
 
-            if (soortOpdracht.equalsIgnoreCase("huiswerk") ) {
+            else if (soortOpdracht.equalsIgnoreCase("huiswerk") ) {
                 this.addHuiswerkOpdracht();
-                a = true;
             }
 
-            if (soortOpdracht.equalsIgnoreCase("menu")) {
+            else if (soortOpdracht.equalsIgnoreCase("menu")) {
                 Main.menu();
-                a = true;
             }
-            a=false;
-        }
 
     }
 
         private void addToetsOpdracht () {
-            System.out.println("Welkom bij het toevoegen van een toets-opdracht, als u wilt stoppen  type dan" + "'stop'");
-            System.out.println("Geef de datum in dit format: jjjj-mm-dd" + "/n" + "De datum moet na vandaag zijn!");
+            System.out.println("Welkom bij het toevoegen van een toets-opdracht, als u wilt stoppen  type dan 'stop'");
+            System.out.println("Geef de datum in dit format: jjjj-mm-dd, de datum moet na vandaag zijn!");
 
             String regDate = scanner.nextLine();
             LocalDate vandaag = LocalDate.now();
             LocalDate date1 = LocalDate.parse(regDate);
             int comparison = date1.compareTo(vandaag);
-            if (regDate.equals("stop") || (comparison > -1)) {
+            if (regDate.equals("stop") || (comparison < -1)) {
                 Main.menu();
             }
-
             System.out.println("Geef de naam van de toets opdracht.:");
             String toetsnaam = scanner.nextLine();
             if (toetsnaam.equals("stop")) {
@@ -80,46 +96,44 @@ class SDLAMethodsFactory {
             if (vaknaam1.equals("stop")) {
                 Main.menu();
             }
-
             System.out.println("Geef een korte omschrijving over deze toets:");
             String omschrijvingToets = scanner.nextLine();
-            if (omschrijvingToets.equals("stop") || omschrijvingToets.length() <= 249) {
+            if (omschrijvingToets.equals("stop") || omschrijvingToets.length() >= 249) {
                 Main.menu();
             }
-
             System.out.println("Voer het aantal studiepunten in(geheel nummer))");
             String stdinvoer = scanner.nextLine();
             if (stdinvoer.equals("stop")) {
                 Main.menu();
             }
             int std = Integer.parseInt(stdinvoer);
-
             System.out.println("Voer het aantal minuten in(geheel nummer))");
             String mininvoer = scanner.nextLine();
             if (mininvoer.equals("stop")) {
                 Main.menu();
             }
             int duur = Integer.parseInt(mininvoer);
-            scanner.nextLine();
-
             System.out.println("Geef het lokaalnummer");
             String lokaal = scanner.nextLine();
             if (lokaal.equals("stop")) {
-                Main.menu();
+                Main.menu();}
+            else {
                 ToetsOpdracht t1 = new ToetsOpdracht(date1, toetsnaam, vaknaam1, omschrijvingToets, std, duur, lokaal);
-                AgendaData.opslag.add(t1);
+                Main.agendaDataObject.opslag.add(t1);
+                System.out.println("Toegevoegd!");
+                Main.menu();
             }
 
         }
         private void addHuiswerkOpdracht(){
             System.out.println("Welkom bij het toevoegen van een huiswerk-opdracht, als u wilt stoppen  type dan" + "'stop'");
-            System.out.println("Geef de datum in dit format: jjjj-mm-dd" + "/n" + "De datum moet na vandaag zijn!");
+            System.out.println("Geef de datum in dit format: jjjj-mm-dd" + "\n" + "De datum moet na vandaag zijn!");
 
             String regDate = scanner.nextLine();
             LocalDate vandaag = LocalDate.now();
             LocalDate date1 = LocalDate.parse(regDate);
             int comparison = date1.compareTo(vandaag);
-            if (regDate.equals("stop") || (comparison > -1)) {
+            if (regDate.equals("stop") || (comparison < -1)) {
                 Main.menu();
             }
 
@@ -135,7 +149,7 @@ class SDLAMethodsFactory {
             }
             System.out.println("Geef een korte omschrijving over deze huiswerk opdracht:");
             String omschrijving = scanner.nextLine();
-            if (omschrijving.equals("stop") || omschrijving.length() <= 249) {
+            if (omschrijving.equals("stop") || omschrijving.length() >= 249) {
                 Main.menu();
             }
 
@@ -151,7 +165,9 @@ class SDLAMethodsFactory {
                 Main.menu();
             } else {
                 HuiswerkOpdracht h1 = new HuiswerkOpdracht(date1, naam1, vaknaam1, omschrijving, teamgenoten, prioriteit);
-                AgendaData.opslag.add(h1);
+                Main.agendaDataObject.opslag.add(h1);
+               System.out.println("Toegevoegd!");
+                Main.menu();
             }
 
     }
@@ -172,6 +188,41 @@ abstract class Opdracht {
         this.omschrijving = omschrijving;
     }
 
+    public String toString(){
+        return ( "Vak: "+ this.vak+ ", Naam opdracht: " + this.naam + "\ndatum :" + this.datum.toString() + "\n" + this.omschrijving + "\n");
+
+    }
+    public LocalDate getDatum() {
+        return datum;
+    }
+
+    public String getNaam() {
+        return naam;
+    }
+
+    public String getVak() {
+        return vak;
+    }
+
+    public String getOmschrijving() {
+        return omschrijving;
+    }
+
+    public void setDatum(LocalDate datum) {
+        this.datum = datum;
+    }
+
+    public void setNaam(String naam) {
+        this.naam = naam;
+    }
+
+    public void setVak(String vak) {
+        this.vak = vak;
+    }
+
+    public void setOmschrijving(String omschrijving) {
+        this.omschrijving = omschrijving;
+    }
 }
 
 class ToetsOpdracht extends Opdracht {
@@ -185,6 +236,38 @@ class ToetsOpdracht extends Opdracht {
         this.minutenduur = minutenduur;
         this.lokaal = lokaal;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "studiepunten=" + studiepunten +
+                " \nminutenduur =" + minutenduur +
+                " \nlokaal= " + lokaal + '\n';
+    }
+
+    public int getStudiepunten() {
+        return studiepunten;
+    }
+
+    public int getMinutenduur() {
+        return minutenduur;
+    }
+
+    public String getLokaal() {
+        return lokaal;
+    }
+
+    public void setStudiepunten(int studiepunten) {
+        this.studiepunten = studiepunten;
+    }
+
+    public void setMinutenduur(int minutenduur) {
+        this.minutenduur = minutenduur;
+    }
+
+    public void setLokaal(String lokaal) {
+        this.lokaal = lokaal;
+    }
 }
 
 class HuiswerkOpdracht extends Opdracht {
@@ -195,5 +278,28 @@ class HuiswerkOpdracht extends Opdracht {
         super(date, naam, vak, omschrijving);
         this.teamgenoten = teamgenoten;
         this.prioriteitOpSchaalVanTien = prioriteitOpSchaalVanTien;
+    }
+
+    public String getTeamgenoten() {
+        return teamgenoten;
+    }
+
+    public int getPrioriteitOpSchaalVanTien() {
+        return prioriteitOpSchaalVanTien;
+    }
+
+    public void setTeamgenoten(String teamgenoten) {
+        this.teamgenoten = teamgenoten;
+    }
+
+    public void setPrioriteitOpSchaalVanTien(int prioriteitOpSchaalVanTien) {
+        this.prioriteitOpSchaalVanTien = prioriteitOpSchaalVanTien;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "HuiswerkOpdracht" +
+                "teamgenoten = " + teamgenoten +
+                "\nprioriteitOpSchaalVanTien = " + prioriteitOpSchaalVanTien ;
     }
 }

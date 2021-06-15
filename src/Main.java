@@ -187,10 +187,11 @@ abstract class Opdracht {
         this.vak = vak;
         this.omschrijving = omschrijving;
     }
+    abstract int getWorkload();
 
     public String toString(){
-        return ( "Vak: "+ this.vak+ ", Naam opdracht: " + this.naam + "\ndatum :" + this.datum.toString() + "\n" + this.omschrijving + "\n");
 
+        return ( "Vak: "+ this.vak+ ", Naam opdracht: " + this.naam + "\ndatum :" + this.datum.toString() + "\n" + this.omschrijving + "\n");
     }
     public LocalDate getDatum() {
         return datum;
@@ -235,6 +236,16 @@ class ToetsOpdracht extends Opdracht {
         this.studiepunten = studiepunten;
         this.minutenduur = minutenduur;
         this.lokaal = lokaal;
+    }
+
+    @Override
+    public int getWorkload() {
+        int workload = 0;
+        for(int i = 0; i < Main.agendaDataObject.opslag.size(); i++){
+        if (Main.agendaDataObject.opslag.get(i) instanceof ToetsOpdracht){
+                workload++;}
+        }
+        return workload;
     }
 
     @Override
@@ -294,6 +305,16 @@ class HuiswerkOpdracht extends Opdracht {
 
     public void setPrioriteitOpSchaalVanTien(int prioriteitOpSchaalVanTien) {
         this.prioriteitOpSchaalVanTien = prioriteitOpSchaalVanTien;
+    }
+
+    @Override
+   public int getWorkload() {
+        int workload = 0;
+        for(int i = 0; i < Main.agendaDataObject.opslag.size(); i++){
+            if (Main.agendaDataObject.opslag.get(i) instanceof HuiswerkOpdracht){
+                workload++;}
+        }
+        return workload;
     }
 
     @Override

@@ -187,7 +187,7 @@ abstract class Opdracht {
         this.vak = vak;
         this.omschrijving = omschrijving;
     }
-    abstract int getWorkload();
+    public abstract int getWorkload();
 
     public String toString(){
 

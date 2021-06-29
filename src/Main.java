@@ -14,9 +14,11 @@ public class Main {
         System.out.println("Voer het nummer in van de optie die u wilt.");
         System.out.println("1: Plaats een opdracht");
         System.out.println("2: Verkrijg uw opdracht");
+        System.out.println("3: Verkrijg de totale workload");
         int keuze = scanner.nextInt();
         if (keuze == 1){sdlaMethodObject.addOpdrachtStart();}
         else if (keuze == 2){agendaDataObject.printOpdracht();}
+        else if (keuze == 3){sdlaMethodObject.printTotaleWorkload();}
 
     }
     public static void main(String[] args) {
@@ -30,7 +32,8 @@ class AgendaData {
     public ArrayList<Opdracht> opslag = new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
 
-    public Opdracht getOpdrachtenOpDatum(LocalDate dag, String naamOpdracht) {
+    public Opdracht getOpdrachtOpDatum(LocalDate dag, String naamOpdracht) {
+
         for (int i = 0; i < Main.agendaDataObject.opslag.size(); i++)
             if (Main.agendaDataObject.opslag.get(i).getDatum().equals(dag) && Main.agendaDataObject.opslag.get(i).getNaam().equalsIgnoreCase(naamOpdracht)) {
                 return Main.agendaDataObject.opslag.get(i);
@@ -44,7 +47,7 @@ class AgendaData {
         LocalDate date = LocalDate.parse(regDate);
         System.out.println("Geef de naam van de opdracht");
         String naam = scanner.nextLine();
-        Opdracht opdracht = getOpdrachtenOpDatum(date, naam);
+        Opdracht opdracht = getOpdrachtOpDatum(date, naam);
         if (opdracht == null) {
             System.out.println("De opdracht bestaat niet");
         } else {
@@ -55,8 +58,18 @@ class AgendaData {
 class SDLAMethodsFactory {
     private Scanner scanner = new Scanner(System.in);
 
+    public void printTotaleWorkload(){
+        ToetsOpdracht toetsOpdrachtVoorWorkload = new ToetsOpdracht(LocalDate.of(2222,9,30),"toets","opt3","Object oriented:)",0,0,"slaapkamer");
+        HuiswerkOpdracht HuiswerkOpdrachtVoorWorkload = new HuiswerkOpdracht(LocalDate.of(2222,9,30),"huiswerk","opt3","Object oriented","Zelfstandig project",0 );
+System.out.println("-----------------------------------------------------------------------");
+        System.out.println("Workload van toetsen: " + toetsOpdrachtVoorWorkload.getWorkload() );
+        System.out.println("Workload van het huiswerk: " + HuiswerkOpdrachtVoorWorkload.getWorkload()  );
+        System.out.println("-----------------------------------------------------------------------");
+        Main.menu();
+    }
+
     public void addOpdrachtStart() {
-        System.out.println("Voer de soort opdracht in ( toets/huiswerk )");
+        System.out.println("Voer de soort opdracht in (toets/huiswerk )");
 
         String soortOpdracht = scanner.nextLine();
 
@@ -75,15 +88,16 @@ class SDLAMethodsFactory {
     }
 
         private void addToetsOpdracht () {
-            System.out.println("Welkom bij het toevoegen van een toets-opdracht, als u wilt stoppen  type dan 'stop'");
+            System.out.println("Welkom bij het toevoegen van een toets-opdracht, als u wilt stoppen type dan 'stop'");
             System.out.println("Geef de datum in dit format: jjjj-mm-dd, de datum moet na vandaag zijn!");
 
             String regDate = scanner.nextLine();
             LocalDate vandaag = LocalDate.now();
             LocalDate date1 = LocalDate.parse(regDate);
             int comparison = date1.compareTo(vandaag);
-            if (regDate.equals("stop") || (comparison < -1)) {
-                Main.menu();
+            if (regDate.equals("stop") || (comparison != 1)) {
+                System.out.println("Voer de volgende keer een geldige datum in!");
+                                Main.menu();
             }
             System.out.println("Geef de naam van de toets opdracht.:");
             String toetsnaam = scanner.nextLine();
@@ -115,14 +129,12 @@ class SDLAMethodsFactory {
             int duur = Integer.parseInt(mininvoer);
             System.out.println("Geef het lokaalnummer");
             String lokaal = scanner.nextLine();
-            if (lokaal.equals("stop")) {
-                Main.menu();}
-            else {
+            if (!lokaal.equals("stop")) {
                 ToetsOpdracht t1 = new ToetsOpdracht(date1, toetsnaam, vaknaam1, omschrijvingToets, std, duur, lokaal);
                 Main.agendaDataObject.opslag.add(t1);
                 System.out.println("Toegevoegd!");
-                Main.menu();
             }
+            Main.menu();
 
         }
         private void addHuiswerkOpdracht(){
@@ -133,16 +145,16 @@ class SDLAMethodsFactory {
             LocalDate vandaag = LocalDate.now();
             LocalDate date1 = LocalDate.parse(regDate);
             int comparison = date1.compareTo(vandaag);
-            if (regDate.equals("stop") || (comparison < -1)) {
+            if (regDate.equals("stop") || (comparison != 1)) {
+                System.out.println("Voer de volgende keer een geldige datum in!");
                 Main.menu();
             }
-
             System.out.println("Geef de naam van de huiswerk opdracht:");
             String naam1 = scanner.nextLine();
             if (naam1.equals("stop")) {
                 Main.menu();
             }
-            System.out.println("Geef de naam van het vak:");
+            System.out.println("Geef de naam van het vak waar het huiswerk over gaat:");
             String vaknaam1 = scanner.nextLine();
             if (vaknaam1.equals("stop")) {
                 Main.menu();
@@ -161,16 +173,14 @@ class SDLAMethodsFactory {
             System.out.println("Geef de prioriteit op een schaal van tien(geheel nummer)");
             String prio = scanner.nextLine();
             int prioriteit = Integer.parseInt(prio);
-            if (prio.equals("stop")) {
-                Main.menu();
-            } else {
+            if (!prio.equals("stop")) {
                 HuiswerkOpdracht h1 = new HuiswerkOpdracht(date1, naam1, vaknaam1, omschrijving, teamgenoten, prioriteit);
                 Main.agendaDataObject.opslag.add(h1);
-               System.out.println("Toegevoegd!");
-                Main.menu();
+                System.out.println("Toegevoegd!");
             }
+            Main.menu();
 
-    }
+        }
 }
 
 
